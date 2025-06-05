@@ -27,11 +27,12 @@
       const data = Object.fromEntries(fd);
       data.newsletter = fd.has('newsletter');
 
+      const params = new URLSearchParams(data);
+
       const res = await fetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
+        body: params
+        });
 
       const result = await res.json();
       if (result.status === 'ok') {

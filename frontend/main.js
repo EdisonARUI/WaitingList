@@ -101,6 +101,8 @@ async function handleFormSubmit(event) {
     // This is the correct format for a simple Google Apps Script POST request.
     const params = new URLSearchParams(formData);
 
+    params.set('newsletter', formData.has('newsletter'));
+    
     try {
         const response = await fetch(CONFIG.scriptURL, {
             method: 'POST',

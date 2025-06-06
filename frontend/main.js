@@ -77,10 +77,11 @@ function validateEmail(email) {
 }
 
 /**
- * Handles the form submission to the Google Apps Script endpoint.
+ * Handles the form submission. It sends the data and assumes success
+ * without waiting for a response from the server.
  * @param {Event} event - The form submission event.
  */
-async function handleFormSubmit(event) {
+function handleFormSubmit(event) {
     event.preventDefault();
     const { form, emailInput } = UI.elements;
 
@@ -92,53 +93,43 @@ async function handleFormSubmit(event) {
     }
 
     UI.showEmailError(false);
-    UI.setLoadingState(true);
+    UI.setLoadingState(true); // 禁用按钮并显示加载状态
+
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    data.newsletter = formData.has('newsletter');
 
     // ======================= HIGHLIGHT START: MODIFICATION =======================
 
-    // 1. 将 FormData 转换为一个普通的 JavaScript 对象
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
-    
-    // 2. 手动处理复选框（checkbox），确保其值为布尔类型
-    // 因为未勾选的复选框不会出现在 FormData 中
-    data.newsletter = formData.has('newsletter');
+    // “即发即忘”请求。我们发送数据，但不等待响应。
+    // 我们为 fetch promise 添加一个 .catch() 以静默记录任何网络错误，
+    // 但 UI 将按照请求假定操作成功。
+    fetch(CONFIG.scriptURL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    }).catch(error => {
+        // 根据指示，我们不向用户显示错误。
+        // 我们只为了调试目的在控制台记录它。
+        console.error('Background submission error:', error);
+    });
 
-    try {
-        const response = await fetch(CONFIG.scriptURL, {
-            method: 'POST',
-            headers: {
-                // 3. 将 Content-Type 修改为 'application/json'
-                'Content-Type': 'application/json',
-            },
-            // 4. 将 JavaScript 对象转换为 JSON 字符串作为请求体
-            body: JSON.stringify(data),
-        });
+    // 立即在 UI 中显示成功反馈。
+    // 按钮将显示成功状态，但保持禁用状态。
+    UI.displayFeedback({ isSuccess: true });
 
-    // ======================== HIGHLIGHT END: MODIFICATION ========================
-
-        // 假设服务器端的 CORS 问题已经解决，我们可以处理响应了
-        const result = await response.json();
-
-        // 优化了成功判断的逻辑，使其与我们推荐的 App Script 脚本返回的 { status: 'success' } 格式完全匹配
-        if (result.status === 'success') {
-            UI.displayFeedback({ isSuccess: true });
-            
-            setTimeout(() => {
-                UI.resetButtonToDefault();
-                UI.elements.formMessages.classList.add(CONFIG.cssClasses.hidden);
-            }, CONFIG.timeouts.successReset);
-        } else {
-            // 处理脚本返回的错误（例如，服务器端验证失败）
-            UI.displayFeedback({ isSuccess: false, message: result.message || CONFIG.messages.defaultError });
+    // 延迟后，将表单和按钮重置为默认状态。
+    setTimeout(() => {
+        UI.resetButtonToDefault(); // 重置按钮文本和样式
+        UI.setLoadingState(false); // 重新启用按钮
+        if (UI.elements.formMessages) {
+             UI.elements.formMessages.classList.add(CONFIG.cssClasses.hidden); // 隐藏成功消息
         }
-    } catch (error) {
-        // 处理网络错误或 fetch 调用本身的问题（例如，CORS仍然失败）
-        console.error('Submission Error:', error);
-        UI.displayFeedback({ isSuccess: false, message: CONFIG.messages.defaultError });
-    } finally {
-        UI.setLoadingState(false);
-    }
+    }, CONFIG.timeouts.successReset);
+    
+    // ======================== HIGHLIGHT END: MODIFICATION ========================
 }
 
 

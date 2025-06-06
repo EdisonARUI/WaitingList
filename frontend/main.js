@@ -94,42 +94,40 @@ async function handleFormSubmit(event) {
     UI.showEmailError(false);
     UI.setLoadingState(true);
 
-    // Create FormData to capture all fields from the form.
     const formData = new FormData(form);
-    
-    // As per the app.html example, encode the form data as URLSearchParams.
-    // This is the correct format for a simple Google Apps Script POST request.
     const params = new URLSearchParams(formData);
-
     params.set('newsletter', formData.has('newsletter'));
     
     try {
         const response = await fetch(CONFIG.scriptURL, {
             method: 'POST',
-            body: params, // Send the URL-encoded data
+            body: params,
         });
 
+        // Assuming the CORS issue is fixed on the server, we can now process the response.
+        // Note: A failed fetch due to CORS will still throw an error and go to the catch block.
         const result = await response.json();
 
-        if (result.status === 'ok') {
-            UI.showSuccessMessage(true);
-            form.reset(); // Clear the form on successful submission
+        // Use the 'result' property from the recommended Apps Script function, but keep 'status' for backward compatibility.
+        if (result.result === 'success' || result.status === 'ok') {
+            UI.displayFeedback({ isSuccess: true });
+            
+            // After showing success, wait for a period, then reset the form UI.
+            setTimeout(() => {
+                UI.resetButtonToDefault();
+                UI.elements.formMessages.classList.add(CONFIG.cssClasses.hidden);
+            }, CONFIG.timeouts.successReset);
         } else {
-            // Handle potential errors returned from the script.
-            UI.showErrorMessage(true, result.message || CONFIG.messages.defaultError);
+            // Handle errors returned by the script (e.g., validation failed on the server).
+            UI.displayFeedback({ isSuccess: false, message: result.message || CONFIG.messages.defaultError });
         }
     } catch (error) {
-        // Handle network errors or issues with the fetch call itself.
+        // Handle network errors or issues with the fetch call itself (like CORS).
         console.error('Submission Error:', error);
-        UI.showErrorMessage(true, CONFIG.messages.defaultError);
+        UI.displayFeedback({ isSuccess: false, message: CONFIG.messages.defaultError });
     } finally {
-        // Always reset the loading state of the button.
-        UI.setLoadingState(false, true); // `true` indicates a final state (success or error)
-        
-        // Hide the success message after a delay so the user can see it.
-        setTimeout(() => {
-            UI.showSuccessMessage(false);
-        }, CONFIG.timeouts.successReset);
+        // Always reset the loading state of the button. The feedback functions handle the text/color.
+        UI.setLoadingState(false);
     }
 }
 

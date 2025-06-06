@@ -29,9 +29,6 @@ function renderPropertyCards() {
                     <p class="property-description text-gray-600 text-sm mb-3">
                         ${property.description}
                     </p>
-                    <div class="property-price text-blue-600 font-semibold text-sm">
-                        Starting from 25% ownership
-                    </div>
                 </div>
             </div>
         `;

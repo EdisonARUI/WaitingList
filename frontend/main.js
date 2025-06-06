@@ -94,42 +94,49 @@ async function handleFormSubmit(event) {
     UI.showEmailError(false);
     UI.setLoadingState(true);
 
+    // ======================= HIGHLIGHT START: MODIFICATION =======================
+
+    // 1. 将 FormData 转换为一个普通的 JavaScript 对象
     const formData = new FormData(form);
-    const params = new URLSearchParams(formData);
-    params.set('newsletter', formData.has('newsletter'));
+    const data = Object.fromEntries(formData.entries());
     
+    // 2. 手动处理复选框（checkbox），确保其值为布尔类型
+    // 因为未勾选的复选框不会出现在 FormData 中
+    data.newsletter = formData.has('newsletter');
+
     try {
         const response = await fetch(CONFIG.scriptURL, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                // 3. 将 Content-Type 修改为 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: params,
+            // 4. 将 JavaScript 对象转换为 JSON 字符串作为请求体
+            body: JSON.stringify(data),
         });
 
-        // Assuming the CORS issue is fixed on the server, we can now process the response.
-        // Note: A failed fetch due to CORS will still throw an error and go to the catch block.
+    // ======================== HIGHLIGHT END: MODIFICATION ========================
+
+        // 假设服务器端的 CORS 问题已经解决，我们可以处理响应了
         const result = await response.json();
 
-        // Use the 'result' property from the recommended Apps Script function, but keep 'status' for backward compatibility.
-        if (result.result === 'success' || result.status === 'ok') {
+        // 优化了成功判断的逻辑，使其与我们推荐的 App Script 脚本返回的 { status: 'success' } 格式完全匹配
+        if (result.status === 'success') {
             UI.displayFeedback({ isSuccess: true });
             
-            // After showing success, wait for a period, then reset the form UI.
             setTimeout(() => {
                 UI.resetButtonToDefault();
                 UI.elements.formMessages.classList.add(CONFIG.cssClasses.hidden);
             }, CONFIG.timeouts.successReset);
         } else {
-            // Handle errors returned by the script (e.g., validation failed on the server).
+            // 处理脚本返回的错误（例如，服务器端验证失败）
             UI.displayFeedback({ isSuccess: false, message: result.message || CONFIG.messages.defaultError });
         }
     } catch (error) {
-        // Handle network errors or issues with the fetch call itself (like CORS).
+        // 处理网络错误或 fetch 调用本身的问题（例如，CORS仍然失败）
         console.error('Submission Error:', error);
         UI.displayFeedback({ isSuccess: false, message: CONFIG.messages.defaultError });
     } finally {
-        // Always reset the loading state of the button. The feedback functions handle the text/color.
         UI.setLoadingState(false);
     }
 }

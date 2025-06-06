@@ -101,6 +101,9 @@ async function handleFormSubmit(event) {
     try {
         const response = await fetch(CONFIG.scriptURL, {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
             body: params,
         });
 

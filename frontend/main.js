@@ -7,12 +7,9 @@ import { propertiesData } from './data.js';
  * Renders property cards into the grid from the data source.
  */
 function renderPropertyCards() {
-    console.log('[Main] Attempting to render property cards...'); // 诊断日志
+    console.log('[Main] Attempting to render property cards...');
     const { propertiesGrid } = UI.elements;
 
-    // This check is crucial. We'll log the element directly before the check.
-    console.log('[Main] Value of UI.elements.propertiesGrid:', propertiesGrid);
-    
     if (!propertiesGrid) {
         console.error('[Main] CRITICAL: Cannot render cards because propertiesGrid is null or undefined.');
         return;
@@ -40,14 +37,14 @@ function renderPropertyCards() {
         `;
         propertiesGrid.insertAdjacentHTML('beforeend', cardHTML);
     });
-    console.log(`[Main] Successfully rendered ${propertiesData.length} property cards.`); // 诊断日志
+    console.log(`[Main] Successfully rendered ${propertiesData.length} property cards.`);
 }
 
 /**
  * Sets up all event listeners for the application.
  */
 function setupEventListeners() {
-    console.log('[Main] Setting up event listeners...'); // 诊断日志
+    console.log('[Main] Setting up event listeners...');
 
     const scrollButton = document.querySelector('.cta-scroll-down');
     if (scrollButton) {
@@ -69,23 +66,69 @@ function setupEventListeners() {
     }
 }
 
-// Form submission and validation logic (remains the same)
+/**
+ * Validates an email address format.
+ * @param {string} email - The email to validate.
+ * @returns {boolean} - True if the email is valid.
+ */
 function validateEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
 
+/**
+ * Handles the form submission to the Google Apps Script endpoint.
+ * @param {Event} event - The form submission event.
+ */
 async function handleFormSubmit(event) {
     event.preventDefault();
-    const email = UI.elements.emailInput.value;
+    const { form, emailInput } = UI.elements;
+
+    const email = emailInput.value;
     if (!validateEmail(email)) {
         UI.showEmailError(true);
-        UI.elements.emailInput.focus();
+        emailInput.focus();
         return;
     }
+
     UI.showEmailError(false);
     UI.setLoadingState(true);
-    // ... rest of the function is the same
+
+    // Create FormData to capture all fields from the form.
+    const formData = new FormData(form);
+    
+    // As per the app.html example, encode the form data as URLSearchParams.
+    // This is the correct format for a simple Google Apps Script POST request.
+    const params = new URLSearchParams(formData);
+
+    try {
+        const response = await fetch(CONFIG.scriptURL, {
+            method: 'POST',
+            body: params, // Send the URL-encoded data
+        });
+
+        const result = await response.json();
+
+        if (result.status === 'ok') {
+            UI.showSuccessMessage(true);
+            form.reset(); // Clear the form on successful submission
+        } else {
+            // Handle potential errors returned from the script.
+            UI.showErrorMessage(true, result.message || CONFIG.messages.defaultError);
+        }
+    } catch (error) {
+        // Handle network errors or issues with the fetch call itself.
+        console.error('Submission Error:', error);
+        UI.showErrorMessage(true, CONFIG.messages.defaultError);
+    } finally {
+        // Always reset the loading state of the button.
+        UI.setLoadingState(false, true); // `true` indicates a final state (success or error)
+        
+        // Hide the success message after a delay so the user can see it.
+        setTimeout(() => {
+            UI.showSuccessMessage(false);
+        }, CONFIG.timeouts.successReset);
+    }
 }
 
 
@@ -93,7 +136,7 @@ async function handleFormSubmit(event) {
  * Main function to start the application.
  */
 function main() {
-    console.log('[Main] DOMContentLoaded event fired. Starting application.'); // 诊断日志
+    console.log('[Main] DOMContentLoaded event fired. Starting application.');
     UI.init();
     renderPropertyCards();
     setupEventListeners();

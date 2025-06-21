@@ -38,7 +38,7 @@ export default function HowItWorksSection() {
   ];
 
   return (
-    <section className="how-it-works-section bg-white min-h-screen flex items-center py-16">
+    <section className="how-it-works-section min-h-screen flex items-center py-16" style={{ backgroundColor: '#D6ECFF' }}>
       <div className="container mx-auto px-4">
         <div className="section-header text-center mb-12">
           <h2 className="section-title text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -68,16 +68,6 @@ export default function HowItWorksSection() {
               </p>
             </div>
           ))}
-        </div>
-        
-        <div className="process-flow-visual mt-12 hidden md:block">
-          <div className="flow-connector flex items-center justify-center space-x-8">
-            <div className="connector-line w-32 h-1 bg-gray-200"></div>
-            <div className="connector-arrow text-gray-400 text-2xl">→</div>
-            <div className="connector-line w-32 h-1 bg-gray-200"></div>
-            <div className="connector-arrow text-gray-400 text-2xl">→</div>
-            <div className="connector-line w-32 h-1 bg-gray-200"></div>
-          </div>
         </div>
       </div>
     </section>

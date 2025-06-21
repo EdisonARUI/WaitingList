@@ -127,7 +127,7 @@ export default function ExploreHomesSection() {
   console.log('Component render - showModal:', showModal, 'selectedProperty:', selectedProperty);
 
   return (
-    <section className="explore-homes-section bg-gray-50 min-h-screen flex items-center py-16">
+    <section className="explore-homes-section min-h-screen flex items-center py-16" style={{ backgroundColor: '#B3D2E0' }}>
       <div className="container mx-auto px-4">
         <div className="section-header text-center mb-12">
           <h2 className="section-title text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -149,6 +149,8 @@ export default function ExploreHomesSection() {
                 <Image
                   src={property.images[0]} 
                   alt={property.location + ' property'} 
+                  width={300}
+                  height={300}
                   className="w-full h-full object-cover transition-transform duration-300 hover:scale-110" 
                 />
               </div>

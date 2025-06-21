@@ -18,7 +18,7 @@ interface HeroSectionProps {
  */
 export default function HeroSection({ onScrollToNext }: HeroSectionProps) {
   return (
-    <section className="hero-section bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center pt-20 relative overflow-hidden">
+    <section className="hero-section min-h-screen flex items-center pt-20 relative overflow-hidden" style={{ backgroundColor: '#E3F0F6' }}>
       <div className="container mx-auto px-4 relative z-0">
         <div className="hero-content-grid grid md:grid-cols-2 gap-8 items-center">
           <div className="hero-text-content">
@@ -60,6 +60,8 @@ export default function HeroSection({ onScrollToNext }: HeroSectionProps) {
             <Image
               src="/images/hero-home.svg"
               alt="Hero-home picture"
+              width={285} 
+              height={277} 
               className="absolute w-full object-cover rounded-lg"     
             />
           </div>

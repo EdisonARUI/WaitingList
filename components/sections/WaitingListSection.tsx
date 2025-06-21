@@ -145,7 +145,7 @@ export default function WaitingListSection() {
   };
 
   return (
-    <footer className="footer bg-gray-900 text-white min-h-screen flex items-center py-16">
+    <footer className="footer text-white min-h-screen flex items-center py-16" style={{ backgroundColor: '#1E2F3F' }}>
       <div className="container mx-auto px-4">
         <div className="waiting-list-section max-w-4xl mx-auto">
           <div className="cta-header text-center mb-12">

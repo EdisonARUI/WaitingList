@@ -8,6 +8,7 @@ interface PropertyData {
   description: string;
   icon: string;
   gradient: string;
+  image: string;
 }
 
 export default function ExploreHomesSection() {
@@ -17,37 +18,43 @@ export default function ExploreHomesSection() {
       location: 'Austin, Texas',
       description: 'Modern 3-bedroom townhome in growing tech hub area with excellent schools and amenities.',
       icon: '🏘️',
-      gradient: 'from-blue-200 to-blue-300'
+      gradient: 'from-blue-200 to-blue-300',
+      image: '/images/p1.png'
     },
     {
       location: 'Denver, Colorado',
       description: 'Charming 2-bedroom condo with mountain views, close to downtown and outdoor recreation.',
       icon: '🏡',
-      gradient: 'from-green-200 to-green-300'
+      gradient: 'from-green-200 to-green-300',
+      image: '/images/p2.png'
     },
     {
       location: 'Raleigh, North Carolina',
       description: 'Spacious 4-bedroom single-family home in family-friendly neighborhood with great schools.',
       icon: '🏠',
-      gradient: 'from-purple-200 to-purple-300'
+      gradient: 'from-purple-200 to-purple-300',
+      image: '/images/p3.png'
     },
     {
       location: 'Phoenix, Arizona',
       description: 'Contemporary 2-bedroom apartment with resort-style amenities and desert landscape views.',
       icon: '🏢',
-      gradient: 'from-yellow-200 to-yellow-300'
+      gradient: 'from-yellow-200 to-yellow-300',
+      image: '/images/p4.png'
     },
     {
       location: 'Nashville, Tennessee',
       description: 'Historic 3-bedroom home renovated with modern amenities in vibrant music district.',
       icon: '🏘️',
-      gradient: 'from-indigo-200 to-indigo-300'
+      gradient: 'from-indigo-200 to-indigo-300',
+      image: '/images/p5.png'
     },
     {
       location: 'Tampa, Florida',
       description: 'Beachside 2-bedroom condo with ocean access and year-round sunshine lifestyle.',
       icon: '🏡',
-      gradient: 'from-pink-200 to-pink-300'
+      gradient: 'from-pink-200 to-pink-300',
+      image: '/images/p6.png'
     }
   ];
 
@@ -66,8 +73,12 @@ export default function ExploreHomesSection() {
         <div className="properties-grid grid md:grid-cols-3 gap-6 mb-8">
           {propertiesData.map((property, index) => (
             <Card key={index} className="property-card bg-white rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-105">
-              <div className={`property-image bg-gradient-to-br ${property.gradient} h-48 flex items-center justify-center`}>
-                <span className="text-4xl">{property.icon}</span>
+              <div className={`property-image h-48 overflow-hidden`}>
+                <img
+                  src={property.image} 
+                  alt={property.location + ' property'} 
+                  className="w-full h-full object-cover" 
+                />
               </div>
               <CardContent className="property-content p-4">
                 <h3 className="property-location text-lg font-semibold text-gray-900 mb-2">

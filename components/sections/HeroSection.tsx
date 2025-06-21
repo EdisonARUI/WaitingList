@@ -8,15 +8,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({ onScrollToNext }: HeroSectionProps) {
   return (
-    // Ensure the section itself takes at least the full viewport height
-    // and is positioned for absolute children.
-    <section className="hero-section min-h-screen flex items-center pt-20 relative overflow-hidden">
-      <img
-        src="/images/background.svg" 
-        alt="Subtle background pattern"
-        className="absolute inset-0 w-full h-full object-contain -z-10 opacity-80"
-      />
-
+    <section className="hero-section bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center pt-20 relative overflow-hidden">
       <div className="container mx-auto px-4 relative z-0">
         <div className="hero-content-grid grid md:grid-cols-2 gap-8 items-center">
           <div className="hero-text-content">
@@ -54,11 +46,11 @@ export default function HeroSection({ onScrollToNext }: HeroSectionProps) {
             </div>
           </div>
           
-          <div className="hero-visual mb-8">
+          <div className="hero-visual mb-8 relative flex items-center justify-center">
             <img
-              src="/images/hero-home.jpg"
-              alt="A modern, beautiful home with large windows and a lush garden"
-              className="w-full h-80 md:h-96 object-cover rounded-lg"
+              src="/images/hero-home.svg"
+              alt="Hero-home picture"
+              className="absolute w-full object-cover rounded-lg"     
             />
           </div>
         </div>

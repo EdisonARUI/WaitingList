@@ -254,14 +254,14 @@ export default function WaitingListSection() {
                     name="interest"
                     value={formData.interest}
                     onChange={(e) => handleInputChange('interest', e.target.value)}
-                    className="form-select w-full px-4 py-4 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                    className="flex h-9 w-full rounded-md border border-gray-600 bg-gray-700 px-3 py-1 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm text-white"
                   >
-                    <option value="">Select your interest level</option>
-                    <option value="first-time-buyer">First-time homebuyer</option>
-                    <option value="upgrading">Upgrading my current home</option>
-                    <option value="investment">Investment property</option>
-                    <option value="relocation">Relocating to new area</option>
-                    <option value="just-curious">Just curious about the concept</option>
+                    <option value="" className="bg-gray-700 text-white">Select your interest level</option>
+                    <option value="first-time-buyer" className="bg-gray-700 text-white">First-time homebuyer</option>
+                    <option value="upgrading" className="bg-gray-700 text-white">Upgrading my current home</option>
+                    <option value="investment" className="bg-gray-700 text-white">Investment property</option>
+                    <option value="relocation" className="bg-gray-700 text-white">Relocating to new area</option>
+                    <option value="just-curious" className="bg-gray-700 text-white">Just curious about the concept</option>
                   </select>
                 </div>
                 

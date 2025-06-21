@@ -1,6 +1,15 @@
 'use client';
 
+/**
+ * Section component explaining the three-step shared ownership process.
+ * Displays the steps with icons, descriptions, and visual flow indicators.
+ * @returns The how it works section with process steps and flow visualization
+ */
 export default function HowItWorksSection() {
+  /** 
+   * Three-step process data with visual styling information.
+   * Each step includes icon, colors, and descriptive content.
+   */
   const steps = [
     {
       stepNumber: 'STEP 1',

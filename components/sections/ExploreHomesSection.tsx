@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import PropertyModal from '@/components/PropertyModal';
+import Image from 'next/image';
 
-// TypeScript interface for property data
+/** Property data structure for displaying home listings */
 interface PropertyData {
   location: string;
   description: string;
@@ -14,19 +15,33 @@ interface PropertyData {
   images: string[];
 }
 
+/**
+ * Section component displaying property cards with modal functionality.
+ * Features property browsing with detailed modal views and navigation.
+ * @returns The explore homes section with property grid and modal
+ */
 export default function ExploreHomesSection() {
-  // Modal state management
+  /** Modal visibility state */
   const [showModal, setShowModal] = useState(false);
+  /** Currently selected property for modal display */
   const [selectedProperty, setSelectedProperty] = useState<PropertyData | null>(null);
+  /** Index of current property for navigation */
   const [currentIndex, setCurrentIndex] = useState(0);
+  /** Hydration safety flag for React Portal */
   const [mounted, setMounted] = useState(false);
 
-  // Ensure we only render portal on client side
+  /**
+   * Ensures React Portal only renders on client-side to prevent hydration mismatches.
+   * This is required when using createPortal with SSR.
+   */
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Properties data - migrated from data.js with multiple images per property
+  /** 
+   * Property listings data with multiple images per property.
+   * Each property includes location info, description, and image gallery.
+   */
   const propertiesData: PropertyData[] = [
     {
       location: 'Austin, Texas',
@@ -72,6 +87,11 @@ export default function ExploreHomesSection() {
     }
   ];
 
+  /**
+   * Opens the property modal with the selected property data.
+   * @param property - The property data to display in the modal
+   * @param index - The index of the property for navigation purposes
+   */
   const openModal = (property: PropertyData, index: number) => {
     console.log('open card', property, index);
     console.log('Setting modal state: showModal=true');
@@ -80,11 +100,13 @@ export default function ExploreHomesSection() {
     setShowModal(true);
   };
 
+  /** Closes the property modal and resets selected property */
   const closeModal = () => {
     setShowModal(false);
     setSelectedProperty(null);
   };
 
+  /** Navigates to the next property in the list if available */
   const goToNextProperty = () => {
     if (currentIndex < propertiesData.length - 1) {
       const nextIndex = currentIndex + 1;
@@ -93,6 +115,7 @@ export default function ExploreHomesSection() {
     }
   };
 
+  /** Navigates to the previous property in the list if available */
   const goToPrevProperty = () => {
     if (currentIndex > 0) {
       const prevIndex = currentIndex - 1;
@@ -123,7 +146,7 @@ export default function ExploreHomesSection() {
               onClick={() => openModal(property, index)}
             >
               <div className={`property-image h-48 overflow-hidden`}>
-                <img
+                <Image
                   src={property.images[0]} 
                   alt={property.location + ' property'} 
                   className="w-full h-full object-cover transition-transform duration-300 hover:scale-110" 
@@ -147,7 +170,7 @@ export default function ExploreHomesSection() {
           ))}
         </div>
 
-        {/* Modal - Rendered via Portal */}
+        {/* Property Modal - Rendered via Portal to escape fullpage.js container */}
         {mounted && showModal && selectedProperty && createPortal(
           <>
             <PropertyModal

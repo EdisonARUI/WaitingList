@@ -19,6 +19,13 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
+/**
+ * Root layout component that wraps the entire application.
+ * Provides theme support and font configuration for all pages.
+ * @param props - The component props.
+ * @param props.children - The page content to render within the layout.
+ * @returns The root HTML structure with theme provider
+ */
 export default function RootLayout({
   children,
 }: Readonly<{

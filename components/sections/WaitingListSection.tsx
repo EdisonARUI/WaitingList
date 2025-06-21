@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 // import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
+/** Form data structure for waiting list signup */
 interface FormData {
   email: string;
   name: string;
@@ -15,6 +16,7 @@ interface FormData {
   newsletter: boolean;
 }
 
+/** Form state for loading, success, and error handling */
 interface FormState {
   isLoading: boolean;
   isSuccess: boolean;
@@ -22,7 +24,14 @@ interface FormState {
   emailError: boolean;
 }
 
+/**
+ * Waiting list section with email signup form and benefits display.
+ * Features form validation, loading states, and success/error messaging.
+ * Currently uses mock API - ready for Supabase integration.
+ * @returns The waiting list section with signup form and benefits
+ */
 export default function WaitingListSection() {
+  /** Form input data state */
   const [formData, setFormData] = useState<FormData>({
     email: '',
     name: '',
@@ -31,6 +40,7 @@ export default function WaitingListSection() {
     newsletter: true
   });
 
+  /** Form UI state management */
   const [formState, setFormState] = useState<FormState>({
     isLoading: false,
     isSuccess: false,
@@ -40,17 +50,25 @@ export default function WaitingListSection() {
 
   // const supabase = createClientComponentClient();
 
-  // Email validation function
+  /**
+   * Validates email format using regex pattern.
+   * @param email - Email string to validate
+   * @returns True if email format is valid
+   */
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  // Handle input changes
+  /**
+   * Handles form input changes and real-time email validation.
+   * @param field - The form field being updated
+   * @param value - The new value for the field
+   */
   const handleInputChange = (field: keyof FormData, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     
-    // Clear email error if user is typing valid email
+    // Real-time email validation feedback
     if (field === 'email' && typeof value === 'string') {
       setFormState(prev => ({ 
         ...prev, 
@@ -59,11 +77,14 @@ export default function WaitingListSection() {
     }
   };
 
-  // Handle form submission
+  /**
+   * Handles form submission with validation and mock API call.
+   * @param e - Form submit event
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate email
+    // Validate email before submission
     if (!validateEmail(formData.email)) {
       setFormState(prev => ({ ...prev, emailError: true }));
       return;
@@ -77,10 +98,10 @@ export default function WaitingListSection() {
     }));
 
     try {
-      // Simulate API call - replace with actual Supabase integration later
+      // Mock API call - replace with actual Supabase integration
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Log form data for now (replace with actual Supabase insertion)
+      // Log form data for development (replace with actual Supabase insertion)
       console.log('Form submitted:', {
         email: formData.email,
         name: formData.name || null,
@@ -90,14 +111,14 @@ export default function WaitingListSection() {
         created_at: new Date().toISOString()
       });
 
-      // Success
+      // Success state
       setFormState(prev => ({ 
         ...prev, 
         isLoading: false, 
         isSuccess: true 
       }));
 
-      // Reset form
+      // Reset form after successful submission
       setFormData({
         email: '',
         name: '',
@@ -106,7 +127,7 @@ export default function WaitingListSection() {
         newsletter: true
       });
 
-      // Reset success state after 3 seconds
+      // Auto-hide success message after 3 seconds
       setTimeout(() => {
         setFormState(prev => ({ 
           ...prev, 
@@ -118,7 +139,7 @@ export default function WaitingListSection() {
       setFormState(prev => ({ 
         ...prev, 
         isLoading: false, 
-        error: 'Something went wrong. Please try again.' 
+        error: 'Something went wrong. Please try again.' + error 
       }));
     }
   };
@@ -166,7 +187,7 @@ export default function WaitingListSection() {
                   <div className="success-msg bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
                     <div className="flex items-center">
                       <span className="mr-2">✅</span>
-                      <span>Thank you! You've been successfully added to our waiting list. Check your email for confirmation.</span>
+                      <span>Thank you! You&apos;ve been successfully added to our waiting list. Check your email for confirmation.</span>
                     </div>
                   </div>
                 )}
@@ -226,7 +247,7 @@ export default function WaitingListSection() {
                 
                 <div className="field-group">
                   <Label htmlFor="interest" className="field-label block text-sm font-medium text-gray-300 mb-2">
-                    I'm interested in <span className="text-gray-500 text-xs">(Optional)</span>
+                    I&apos;m interested in <span className="text-gray-500 text-xs">(Optional)</span>
                   </Label>
                   <select 
                     id="interest" 
@@ -269,7 +290,7 @@ export default function WaitingListSection() {
                       className="form-checkbox mt-1 mr-3 h-4 w-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500 focus:ring-2"
                     />
                     <Label htmlFor="newsletter" className="text-sm text-gray-300 leading-relaxed">
-                      I'd like to receive updates about new properties, market insights, and exclusive offers. 
+                      I&apos;d like to receive updates about new properties, market insights, and exclusive offers. 
                       You can unsubscribe at any time.
                     </Label>
                   </div>

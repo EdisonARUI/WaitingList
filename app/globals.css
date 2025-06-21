@@ -90,39 +90,38 @@
 
 /* Custom navigation tooltip styles */
 #fp-nav ul li .fp-tooltip {
-  visibility: hidden; /* 使用 visibility 而不是 display，因为它允许 transition */
-  opacity: 0; /* 默认完全透明 */
-  transition: opacity 0.3s ease, visibility 0.3s ease; /* 添加过渡效果，让显示更平滑 */
+  visibility: hidden; /* Use visibility instead of display to allow smooth transitions */
+  opacity: 0; /* Default fully transparent state */
+  transition: opacity 0.3s ease, visibility 0.3s ease; /* Smooth show/hide animation */
 
-  /* 移除所有方框相关的样式 */
-  background-color: transparent !important; /* 确保背景是透明的 */
-  border: none !important; /* 移除边框 */
-  box-shadow: none !important; /* 移除阴影 */
-  padding: 0 !important; /* 移除内边距，使文字紧凑 */
-  margin-left: 10px; /* 调整文字与导航点之间的距离 */
+  /* Remove all box-related styles for clean text-only display */
+  background-color: transparent !important; /* Ensure transparent background */
+  border: none !important; /* Remove borders */
+  box-shadow: none !important; /* Remove shadows */
+  padding: 0 !important; /* Remove padding for compact text */
+  margin-left: 10px; /* Adjust spacing between tooltip and navigation dot */
 
-  /* 你可以根据需要添加文本样式 */
-  color: #000 !important; /* 文本颜色，例如深灰色 */
-  font-size: 0.9rem; /* 字体大小 */
-  white-space: nowrap; /* 防止文本换行 */
-  /* 如果你的设计要求，也可以使用 @apply 来定义颜色和字体等 */
-  /* @apply text-gray-700 text-sm; */
+  /* Text styling for better readability */
+  color: #000 !important; /* Dark text color for contrast */
+  font-size: 0.9rem; /* Appropriate font size */
+  white-space: nowrap; /* Prevent text wrapping */
 }
 
-/* 当鼠标悬停到导航列表项时，显示对应的 tooltip */
+/* Show tooltip on hover over navigation list item */
 #fp-nav ul li:hover .fp-tooltip {
-  visibility: visible; /* 让元素可见 */
-  opacity: 1; /* 完全显示 */
+  visibility: visible; /* Make element visible */
+  opacity: 1; /* Fully opaque */
 }
 
-/* 确保导航点本身在 hover 时没有不必要的样式变化，保持其颜色 */
+/* Maintain navigation dot color consistency on hover */
 #fp-nav ul li a:hover span {
-  background-color: #3b82f6 !important; /* 保持非激活状态的蓝色 */
+  background-color: #3b82f6 !important; /* Maintain inactive blue color */
   border: none !important;
   box-shadow: none !important;
 }
 
-/* 确保导航项的容器在 hover 时没有不必要的背景 */
+/* Ensure navigation item container has no background on hover */
 #fp-nav ul li:hover {
   background-color: transparent !important;
 }
+

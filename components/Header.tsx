@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * Fixed header component displaying the brand logo and tagline.
+ * Positioned absolutely to stay visible across all fullpage.js sections.
+ * @returns The header component with logo and tagline
+ */
 export default function Header() {
   return (
     <header className="header bg-white shadow-sm absolute top-0 left-0 right-0 z-50">

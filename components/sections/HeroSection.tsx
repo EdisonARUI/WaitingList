@@ -1,11 +1,21 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
+/** Props for the HeroSection component */
 interface HeroSectionProps {
+  /** Callback function to trigger scroll to next section */
   onScrollToNext: () => void;
 }
 
+/**
+ * Hero section component displaying the main value proposition.
+ * Features call-to-action to scroll to the next section explaining the process.
+ * @param props - The component props
+ * @param props.onScrollToNext - Callback function to trigger scroll to next section
+ * @returns The hero section component with value proposition and CTA
+ */
 export default function HeroSection({ onScrollToNext }: HeroSectionProps) {
   return (
     <section className="hero-section bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center pt-20 relative overflow-hidden">
@@ -31,7 +41,7 @@ export default function HeroSection({ onScrollToNext }: HeroSectionProps) {
               <div className="value-prop flex items-start">
                 <div className="prop-icon w-6 h-6 bg-green-500 rounded-full flex-shrink-0 mt-1 mr-3"></div>
                 <p className="prop-text text-gray-700">
-                  <strong>Gradual Ownership Growth:</strong> Increase your share when you're ready
+                  <strong>Gradual Ownership Growth:</strong> Increase your share when you&apos;re ready
                 </p>
               </div>
             </div>
@@ -47,7 +57,7 @@ export default function HeroSection({ onScrollToNext }: HeroSectionProps) {
           </div>
           
           <div className="hero-visual mb-8 relative flex items-center justify-center">
-            <img
+            <Image
               src="/images/hero-home.svg"
               alt="Hero-home picture"
               className="absolute w-full object-cover rounded-lg"     

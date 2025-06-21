@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 
-// TypeScript interface for property data
+/** Property data structure for modal display */
 interface PropertyData {
   location: string;
   description: string;
@@ -14,15 +14,35 @@ interface PropertyData {
   images: string[];
 }
 
+/** Props for the PropertyModal component */
 interface PropertyModalProps {
+  /** Property data to display in the modal */
   property: PropertyData;
+  /** Callback to close the modal */
   onClose: () => void;
+  /** Callback to navigate to next property */
   onNext: () => void;
+  /** Callback to navigate to previous property */
   onPrev: () => void;
+  /** Whether this is the first property (disables prev navigation) */
   isFirstProperty: boolean;
+  /** Whether this is the last property (disables next navigation) */
   isLastProperty: boolean;
 }
 
+/**
+ * Full-screen modal component for displaying property details with image gallery.
+ * Features keyboard navigation, image thumbnails, and property navigation.
+ * Rendered via React Portal to escape parent container constraints.
+ * @param props - The component props
+ * @param props.property - Property data to display in the modal
+ * @param props.onClose - Callback to close the modal
+ * @param props.onNext - Callback to navigate to next property
+ * @param props.onPrev - Callback to navigate to previous property
+ * @param props.isFirstProperty - Whether this is the first property (disables prev navigation)
+ * @param props.isLastProperty - Whether this is the last property (disables next navigation)
+ * @returns The modal component rendered via React Portal
+ */
 export default function PropertyModal({ 
   property, 
   onClose, 
@@ -31,15 +51,23 @@ export default function PropertyModal({
   isFirstProperty, 
   isLastProperty 
 }: PropertyModalProps) {
+  /** Currently selected image index in the gallery */
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  /** Hydration safety flag for React Portal */
   const [mounted, setMounted] = useState(false);
 
-  // Ensure we only render on client side
+  /**
+   * Ensures component only renders on client-side to prevent hydration issues.
+   * Required when using createPortal with SSR.
+   */
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Handle keyboard navigation
+  /**
+   * Sets up keyboard navigation for modal interactions.
+   * Escape closes modal, arrow keys navigate between properties.
+   */
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -55,26 +83,38 @@ export default function PropertyModal({
     return () => document.removeEventListener('keydown', handleKeyPress);
   }, [onClose, onNext, onPrev, isFirstProperty, isLastProperty]);
 
-  // Reset selected image when property changes
+  /** Resets image gallery to first image when property changes */
   useEffect(() => {
     setSelectedImageIndex(0);
   }, [property]);
 
+  /**
+   * Handles thumbnail click to change main image display.
+   * @param index - Index of the image to display
+   */
   const handleThumbnailClick = (index: number) => {
     setSelectedImageIndex(index);
   };
 
+  /**
+   * Closes modal when clicking on backdrop (outside modal content).
+   * @param e - Mouse event from backdrop click
+   */
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
   };
 
+  /**
+   * Prevents modal close when clicking inside modal content.
+   * @param e - Mouse event from modal content
+   */
   const handleModalContentClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
 
-  // Don't render anything on server side or if not mounted
+  // Prevent SSR rendering issues
   if (!mounted) return null;
 
   const modalContent = (
@@ -179,6 +219,6 @@ export default function PropertyModal({
     </div>
   );
 
-  // Use React Portal to render outside of fullpage.js control
+  /** Render modal via Portal to bypass fullpage.js container restrictions */
   return createPortal(modalContent, document.body);
 } 

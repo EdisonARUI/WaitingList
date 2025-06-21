@@ -1,6 +1,9 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Card, CardContent } from '@/components/ui/card';
+import PropertyModal from '@/components/PropertyModal';
 
 // TypeScript interface for property data
 interface PropertyData {
@@ -8,55 +11,97 @@ interface PropertyData {
   description: string;
   icon: string;
   gradient: string;
-  image: string;
+  images: string[];
 }
 
 export default function ExploreHomesSection() {
-  // Properties data - migrated from data.js
+  // Modal state management
+  const [showModal, setShowModal] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState<PropertyData | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  // Ensure we only render portal on client side
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Properties data - migrated from data.js with multiple images per property
   const propertiesData: PropertyData[] = [
     {
       location: 'Austin, Texas',
       description: 'Modern 3-bedroom townhome in growing tech hub area with excellent schools and amenities.',
       icon: '🏘️',
       gradient: 'from-blue-200 to-blue-300',
-      image: '/images/p1.png'
+      images: ['/images/p1.png', '/images/p1-1.png', '/images/p1-2.png', '/images/p1-3.png']
     },
     {
       location: 'Denver, Colorado',
       description: 'Charming 2-bedroom condo with mountain views, close to downtown and outdoor recreation.',
       icon: '🏡',
       gradient: 'from-green-200 to-green-300',
-      image: '/images/p2.png'
+      images: ['/images/p2.png', '/images/p2-1.png', '/images/p2-2.png', '/images/p2-3.png']
     },
     {
       location: 'Raleigh, North Carolina',
       description: 'Spacious 4-bedroom single-family home in family-friendly neighborhood with great schools.',
       icon: '🏠',
       gradient: 'from-purple-200 to-purple-300',
-      image: '/images/p3.png'
+      images: ['/images/p3.png', '/images/p3-1.png', '/images/p3-2.png', '/images/p3-3.png']
     },
     {
       location: 'Phoenix, Arizona',
       description: 'Contemporary 2-bedroom apartment with resort-style amenities and desert landscape views.',
       icon: '🏢',
       gradient: 'from-yellow-200 to-yellow-300',
-      image: '/images/p4.png'
+      images: ['/images/p4.png', '/images/p4-1.png', '/images/p4-2.png', '/images/p4-3.png']
     },
     {
       location: 'Nashville, Tennessee',
       description: 'Historic 3-bedroom home renovated with modern amenities in vibrant music district.',
       icon: '🏘️',
       gradient: 'from-indigo-200 to-indigo-300',
-      image: '/images/p5.png'
+      images: ['/images/p5.png', '/images/p5-1.png', '/images/p5-2.png', '/images/p5-3.png']
     },
     {
       location: 'Tampa, Florida',
       description: 'Beachside 2-bedroom condo with ocean access and year-round sunshine lifestyle.',
       icon: '🏡',
       gradient: 'from-pink-200 to-pink-300',
-      image: '/images/p6.png'
+      images: ['/images/p6.png', '/images/p6-1.png', '/images/p6-2.png', '/images/p6-3.png']
     }
   ];
+
+  const openModal = (property: PropertyData, index: number) => {
+    console.log('open card', property, index);
+    console.log('Setting modal state: showModal=true');
+    setSelectedProperty(property);
+    setCurrentIndex(index);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedProperty(null);
+  };
+
+  const goToNextProperty = () => {
+    if (currentIndex < propertiesData.length - 1) {
+      const nextIndex = currentIndex + 1;
+      setCurrentIndex(nextIndex);
+      setSelectedProperty(propertiesData[nextIndex]);
+    }
+  };
+
+  const goToPrevProperty = () => {
+    if (currentIndex > 0) {
+      const prevIndex = currentIndex - 1;
+      setCurrentIndex(prevIndex);
+      setSelectedProperty(propertiesData[prevIndex]);
+    }
+  };
+
+  console.log('Component render - showModal:', showModal, 'selectedProperty:', selectedProperty);
 
   return (
     <section className="explore-homes-section bg-gray-50 min-h-screen flex items-center py-16">
@@ -72,12 +117,16 @@ export default function ExploreHomesSection() {
         
         <div className="properties-grid grid md:grid-cols-3 gap-6 mb-8">
           {propertiesData.map((property, index) => (
-            <Card key={index} className="property-card bg-white rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-105">
+            <Card 
+              key={index} 
+              className="property-card bg-white rounded-lg shadow-md overflow-hidden transform transition-transform hover:scale-105 cursor-pointer"
+              onClick={() => openModal(property, index)}
+            >
               <div className={`property-image h-48 overflow-hidden`}>
                 <img
-                  src={property.image} 
+                  src={property.images[0]} 
                   alt={property.location + ' property'} 
-                  className="w-full h-full object-cover" 
+                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-110" 
                 />
               </div>
               <CardContent className="property-content p-4">
@@ -87,10 +136,31 @@ export default function ExploreHomesSection() {
                 <p className="property-description text-gray-600 text-sm mb-3">
                   {property.description}
                 </p>
+                <div className="view-details text-blue-600 text-sm font-medium flex items-center">
+                  <span>View Details</span>
+                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
               </CardContent>
             </Card>
           ))}
         </div>
+
+        {/* Modal - Rendered via Portal */}
+        {mounted && showModal && selectedProperty && createPortal(
+          <>
+            <PropertyModal
+              property={selectedProperty}
+              onClose={closeModal}
+              onNext={goToNextProperty}
+              onPrev={goToPrevProperty}
+              isFirstProperty={currentIndex === 0}
+              isLastProperty={currentIndex === propertiesData.length - 1}
+            />
+          </>,
+          document.body
+        )}
       </div>
     </section>
   );

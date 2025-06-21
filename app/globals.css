@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Fullpage.js custom styles */
+#fp-nav ul li a span {
+  background: #3b82f6; /* blue-500 */
+}
+
+#fp-nav ul li a.active span {
+  background: #1d4ed8; /* blue-700 */
+}
+
+/* Fix for header positioning with fullpage */
+.fp-enabled .fp-viewing-0 .header {
+  position: fixed;
+  top: 0;
+  z-index: 100;
+}
+
+/* Ensure smooth scrolling */
+.fp-section {
+  position: relative;
+}
+
+/* Custom navigation tooltip styles */
+#fp-nav ul li .fp-tooltip {
+  visibility: hidden; /* 使用 visibility 而不是 display，因为它允许 transition */
+  opacity: 0; /* 默认完全透明 */
+  transition: opacity 0.3s ease, visibility 0.3s ease; /* 添加过渡效果，让显示更平滑 */
+
+  /* 移除所有方框相关的样式 */
+  background-color: transparent !important; /* 确保背景是透明的 */
+  border: none !important; /* 移除边框 */
+  box-shadow: none !important; /* 移除阴影 */
+  padding: 0 !important; /* 移除内边距，使文字紧凑 */
+  margin-left: 10px; /* 调整文字与导航点之间的距离 */
+
+  /* 你可以根据需要添加文本样式 */
+  color: #000 !important; /* 文本颜色，例如深灰色 */
+  font-size: 0.9rem; /* 字体大小 */
+  white-space: nowrap; /* 防止文本换行 */
+  /* 如果你的设计要求，也可以使用 @apply 来定义颜色和字体等 */
+  /* @apply text-gray-700 text-sm; */
+}
+
+/* 当鼠标悬停到导航列表项时，显示对应的 tooltip */
+#fp-nav ul li:hover .fp-tooltip {
+  visibility: visible; /* 让元素可见 */
+  opacity: 1; /* 完全显示 */
+}
+
+/* 确保导航点本身在 hover 时没有不必要的样式变化，保持其颜色 */
+#fp-nav ul li a:hover span {
+  background-color: #3b82f6 !important; /* 保持非激活状态的蓝色 */
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* 确保导航项的容器在 hover 时没有不必要的背景 */
+#fp-nav ul li:hover {
+  background-color: transparent !important;
+}

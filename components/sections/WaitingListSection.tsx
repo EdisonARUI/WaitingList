@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import type { WaitingListFormData, WaitingListResponse } from '@/Interface/WaitingList';
 // import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 /** Form data structure for waiting list signup */
@@ -78,7 +79,7 @@ export default function WaitingListSection() {
   };
 
   /**
-   * Handles form submission with validation and mock API call.
+   * Handles form submission with API call to our backend
    * @param e - Form submit event
    */
   const handleSubmit = async (e: React.FormEvent) => {
@@ -98,18 +99,39 @@ export default function WaitingListSection() {
     }));
 
     try {
-      // Mock API call - replace with actual Supabase integration
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Log form data for development (replace with actual Supabase insertion)
-      console.log('Form submitted:', {
-        email: formData.email,
-        name: formData.name || null,
-        interest: formData.interest || null,
-        location: formData.location || null,
-        newsletter: formData.newsletter,
-        created_at: new Date().toISOString()
+      const response = await fetch('/api/waiting-list', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
+
+      const result: WaitingListResponse = await response.json();
+
+      if (!response.ok || !result.success) {
+        // Handle specific errors
+        if (result.error === 'DUPLICATE_EMAIL') {
+          setFormState(prev => ({ 
+            ...prev, 
+            isLoading: false, 
+            error: 'This email is already registered in our waiting list.' 
+          }));
+        } else if (result.error === 'INVALID_EMAIL') {
+          setFormState(prev => ({ 
+            ...prev, 
+            isLoading: false, 
+            emailError: true 
+          }));
+        } else {
+          setFormState(prev => ({ 
+            ...prev, 
+            isLoading: false, 
+            error: result.message || 'Something went wrong. Please try again.' 
+          }));
+        }
+        return;
+      }
 
       // Success state
       setFormState(prev => ({ 
@@ -127,19 +149,20 @@ export default function WaitingListSection() {
         newsletter: true
       });
 
-      // Auto-hide success message after 3 seconds
+      // Auto-hide success message after 5 seconds
       setTimeout(() => {
         setFormState(prev => ({ 
           ...prev, 
           isSuccess: false 
         }));
-      }, 3000);
+      }, 5000);
 
     } catch (error) {
+      console.error('Submit error:', error);
       setFormState(prev => ({ 
         ...prev, 
         isLoading: false, 
-        error: 'Something went wrong. Please try again.' + error 
+        error: 'Network error. Please check your connection and try again.' 
       }));
     }
   };

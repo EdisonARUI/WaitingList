@@ -44,42 +44,42 @@ export default function ExploreHomesSection() {
    */
   const propertiesData: PropertyData[] = [
     {
-      location: 'Austin, Texas',
+      location: 'KLCC, Kuala Lumpur',
       description: 'Modern 3-bedroom townhome in growing tech hub area with excellent schools and amenities.',
       icon: '🏘️',
       gradient: 'from-blue-200 to-blue-300',
       images: ['/images/p1.png', '/images/p1-1.png', '/images/p1-2.png', '/images/p1-3.png']
     },
     {
-      location: 'Denver, Colorado',
+      location: 'KLCC, Kuala Lumpur',
       description: 'Charming 2-bedroom condo with mountain views, close to downtown and outdoor recreation.',
       icon: '🏡',
       gradient: 'from-green-200 to-green-300',
       images: ['/images/p2.png', '/images/p2-1.png', '/images/p2-2.png', '/images/p2-3.png']
     },
     {
-      location: 'Raleigh, North Carolina',
+      location: 'KLCC, Kuala Lumpur',
       description: 'Spacious 4-bedroom single-family home in family-friendly neighborhood with great schools.',
       icon: '🏠',
       gradient: 'from-purple-200 to-purple-300',
       images: ['/images/p3.png', '/images/p3-1.png', '/images/p3-2.png', '/images/p3-3.png']
     },
     {
-      location: 'Phoenix, Arizona',
+      location: 'KLCC, Kuala Lumpur',
       description: 'Contemporary 2-bedroom apartment with resort-style amenities and desert landscape views.',
       icon: '🏢',
       gradient: 'from-yellow-200 to-yellow-300',
       images: ['/images/p4.png', '/images/p4-1.png', '/images/p4-2.png', '/images/p4-3.png']
     },
     {
-      location: 'Nashville, Tennessee',
+      location: 'TRX, Kuala Lumpur',
       description: 'Historic 3-bedroom home renovated with modern amenities in vibrant music district.',
       icon: '🏘️',
       gradient: 'from-indigo-200 to-indigo-300',
       images: ['/images/p5.png', '/images/p5-1.png', '/images/p5-2.png', '/images/p5-3.png']
     },
     {
-      location: 'Tampa, Florida',
+      location: 'TRX, Kuala Lumpur',
       description: 'Beachside 2-bedroom condo with ocean access and year-round sunshine lifestyle.',
       icon: '🏡',
       gradient: 'from-pink-200 to-pink-300',
